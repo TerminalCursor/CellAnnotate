@@ -456,13 +456,13 @@ class Find_3D(object):
 			Stack ellipsoids but make them oriented differently.
 			"""
 			a1, b1, c1 = 4, 2, 1
-			a2, b2, c2 = 2, 4, 1
+			theta = np.pi / 4
 			r=6
 			xc = len(x)//2
 			zc = len(z)//4 #THERE IS SOME ISSUE WITH SETTING THE Z center NOT IN THE CENTER...
 			zcc = len(z)*3//4
-			E1.move_and_scale(xc, xc, zc, a1, b1, c1, r)
-			E2.move_and_scale(xc, xc, zcc, a2, b2, c2, r)
+			E1.move_and_scale(xc, xc, zc, a, b, c, r)
+			E2.move_and_scale(xc, xc, zcc, a, b, c, r, theta)
 		mask_gt = np.zeros(shape=(len(x),len(y),2))
 		for i in range(len(x)):
 			for j in range(len(y)):

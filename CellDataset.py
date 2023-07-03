@@ -160,7 +160,7 @@ class CellDataset(object):
 				print(self.image_info[image_id])
 			#put each annotation in a different channel.
 
-		return mask.astype(np.bool)
+		return mask.astype(np.bool_)
 
 	def load_borders(self, image_id):
 		"""Generate instance masks for an image.
@@ -278,7 +278,7 @@ class CellDataset(object):
 				wmap[rr,cc,0] = 1
 				#put each annotation in a different channel.
 
-			wmap = wmap.astype(np.bool)
+			wmap = wmap.astype(np.bool_)
 
 		except:
 			wmap = False #we dont' have shape yet. Still works with np.where.

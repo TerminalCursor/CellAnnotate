@@ -248,7 +248,7 @@ class Find_3D(object):
 		if return_verts:
 			return obj_verts, obj_faces, obj_norms, obj_pixels, Iall
 		else:
-			return obj_pixels, Iall.astype(np.bool)
+			return obj_pixels, Iall.astype(np.bool_)
 
 	def save_zstack(self, data, filepath=None):
 		"""
@@ -484,7 +484,7 @@ class Find_3D(object):
 							mask[i,j,k]=1.
 							mask_gt[i,j,1]=1.
 		#self.plot_z_stack(mask)
-		return mask.astype(np.bool), mask_gt.astype(np.bool)
+		return mask.astype(np.bool_), mask_gt.astype(np.bool_)
 
 	def generate_test_image(self, mask):
 		"""

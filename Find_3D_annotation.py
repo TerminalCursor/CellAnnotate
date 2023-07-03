@@ -412,12 +412,12 @@ class Find_3D(object):
 		button_close.on_clicked(close)
 		plt.show()
 
-	def generate_mask(self, separation=0.0, rel_angle=0.0, r=4.0):
+	def generate_mask(self, separation=0.0, rel_angle=0.0, r=4.0, c=1.0, z_stack_count=20):
 		from math import ceil
 		#ellipsoids
 		SIZE_X = 1024
 		SIZE_Y = SIZE_X
-		SIZE_Z = 25
+		SIZE_Z = z_stack_count
 		x = np.linspace(0,SIZE_X-1,SIZE_X)
 		y = np.linspace(0,SIZE_Y-1,SIZE_Y)
 		z = np.linspace(0,SIZE_Z-1,SIZE_Z)
@@ -428,7 +428,7 @@ class Find_3D(object):
 		"""
 		Stack ellipsoids perfectly above and below.
 		"""
-		a, b, c = 4, 2, 1
+		a, b = 4, 2
 		zc = r * c
 		zcc = zc + r * c + separation + r * c
 		xyc = len(x)//2

@@ -429,7 +429,8 @@ class Find_3D(object):
 		Stack ellipsoids perfectly above and below.
 		"""
 		a, b = 4, 2
-		zc = r * c
+		z_ini = np.random.rand()
+		zc = z_ini + r * c
 		zcc = zc + r * c + separation + r * c
 		xyc = len(x)//2
 		E1.move_and_scale(xyc, xyc, zc, a, b, c, r)

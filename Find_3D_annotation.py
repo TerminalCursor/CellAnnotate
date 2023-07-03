@@ -455,7 +455,7 @@ class Find_3D(object):
 			"""
 			Stack ellipsoids but make them oriented differently.
 			"""
-			a1, b1, c1 = 4, 2, 1
+			a, b, c = 4, 2, 1
 			theta = np.pi / 4
 			r=6
 			xc = len(x)//2

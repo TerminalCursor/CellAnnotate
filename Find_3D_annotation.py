@@ -414,9 +414,12 @@ class Find_3D(object):
 
 	def generate_test_mask(self, nearby_xy = False, stacked = False, angled = False, overlapped = True):
 		#ellipsoids
-		x = np.linspace(0,127,128)
-		y = np.linspace(0,127,128)
-		z = np.linspace(0,24,25)
+		SIZE_X = 128
+		SIZE_Y = SIZE_X
+		SIZE_Z = 25
+		x = np.linspace(0,SIZE_X-1,SIZE_X)
+		y = np.linspace(0,SIZE_Y-1,SIZE_Y)
+		z = np.linspace(0,SIZE_Z-1,SIZE_Z)
 		u,_,_ = np.meshgrid(x,y,z) #x,y,z coordinates. H x W x Z matrix.
 		mask = np.zeros_like(u)
 		E1 = Ellipsoid()

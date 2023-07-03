@@ -412,7 +412,7 @@ class Find_3D(object):
 		button_close.on_clicked(close)
 		plt.show()
 
-	def generate_mask(self, separation=0.0, rel_angle=0.0, r=3.0):
+	def generate_mask(self, separation=0.0, rel_angle=0.0, r=4.0):
 		from math import ceil
 		#ellipsoids
 		SIZE_X = 1024

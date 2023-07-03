@@ -434,10 +434,16 @@ class Find_3D(object):
 		xyc = len(x)//2
 		E1.move_and_scale(xyc, xyc, zc, a, b, c, r)
 		E2.move_and_scale(xyc, xyc, zcc, a, b, c, r, rel_angle)
+
+		MIN_XY = max(0, int(np.floor(xyc - 2.0 * max(a, b) * r)))
+		MAX_XY = min(SIZE_X, int(np.ceil(xyc + 2.0 * max(a, b) * r)))
+		MIN_Z = 0
+		MAX_Z = min(SIZE_Z, int(np.ceil(zcc + zcc + 2.0 * r * c)))
+
 		mask_gt = np.zeros(shape=(len(x),len(y),2))
-		for i in range(len(x)):
-			for j in range(len(y)):
-				for k in range(len(z)):
+		for i in range(MIN_XY, MAX_XY+1):
+			for j in range(MIN_XY, MAX_XY+1):
+				for k in range(MAX_Z):
 					if E1.check(x[i], y[j], z[k]):
 						mask[i,j,k]=1.
 						mask_gt[i,j,0]=1.

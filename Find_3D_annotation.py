@@ -412,6 +412,40 @@ class Find_3D(object):
 		button_close.on_clicked(close)
 		plt.show()
 
+	def generate_mask(self, separation=0.0, rel_angle=0.0, r=3.0):
+		from math import ceil
+		#ellipsoids
+		SIZE_X = 1024
+		SIZE_Y = SIZE_X
+		SIZE_Z = 25
+		x = np.linspace(0,SIZE_X-1,SIZE_X)
+		y = np.linspace(0,SIZE_Y-1,SIZE_Y)
+		z = np.linspace(0,SIZE_Z-1,SIZE_Z)
+		u,_,_ = np.meshgrid(x,y,z) #x,y,z coordinates. H x W x Z matrix.
+		mask = np.zeros_like(u)
+		E1 = Ellipsoid()
+		E2 = Ellipsoid()
+		"""
+		Stack ellipsoids perfectly above and below.
+		"""
+		a, b, c = 4, 2, 1
+		zc = r * c
+		zcc = zc + r * c + separation + r * c
+		xyc = len(x)//2
+		E1.move_and_scale(xyc, xyc, zc, a, b, c, r)
+		E2.move_and_scale(xyc, xyc, zcc, a, b, c, r, rel_angle)
+		mask_gt = np.zeros(shape=(len(x),len(y),2))
+		for i in range(len(x)):
+			for j in range(len(y)):
+				for k in range(len(z)):
+					if E1.check(x[i], y[j], z[k]):
+						mask[i,j,k]=1.
+						mask_gt[i,j,0]=1.
+					if E2.check(x[i], y[j], z[k]):
+						mask[i,j,k]=1.
+						mask_gt[i,j,1]=1.
+		return mask.astype(np.bool_), mask_gt.astype(np.bool_)
+
 	def generate_test_mask(self, nearby_xy = False, stacked = False, angled = False, overlapped = True):
 		#ellipsoids
 		SIZE_X = 1024

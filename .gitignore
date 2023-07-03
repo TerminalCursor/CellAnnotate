@@ -2,4 +2,5 @@
 __pycache__
 **.ome.tif
 **.npz
+**.swp
 run.py

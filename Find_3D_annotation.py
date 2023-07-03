@@ -414,7 +414,7 @@ class Find_3D(object):
 
 	def generate_test_mask(self, nearby_xy = False, stacked = False, angled = False, overlapped = True):
 		#ellipsoids
-		SIZE_X = 128
+		SIZE_X = 1024
 		SIZE_Y = SIZE_X
 		SIZE_Z = 25
 		x = np.linspace(0,SIZE_X-1,SIZE_X)

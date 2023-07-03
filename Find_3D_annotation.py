@@ -45,6 +45,8 @@ import skimage.measure
 from scipy.signal import argrelextrema
 from CellDataset import *
 
+from geometry_shapes import Ellipsoid
+
 class Find_3D(object):
 	def __init__(self):
 		pass
@@ -417,6 +419,8 @@ class Find_3D(object):
 		z = np.linspace(0,24,25)
 		u,_,_ = np.meshgrid(x,y,z) #x,y,z coordinates. H x W x Z matrix.
 		mask = np.zeros_like(u)
+		E1 = Ellipsoid()
+		E2 = Ellipsoid()
 		if nearby_xy:
 			"""
 			Put ellipsoids in the center stack but different x y locations
@@ -426,16 +430,8 @@ class Find_3D(object):
 			xc = len(x)//4
 			xcc = len(x)*3//4
 			zc = len(z)//2
-			mask_gt = np.zeros(shape=(len(x),len(y),2))
-			for i in range(len(x)):
-				for j in range(len(y)):
-					for k in range(len(z)):
-						if ((x[i]-xc)*(x[i]-xc))/(a*a) + ((y[j]-xc)*(y[j]-xc))/(b*b) + ((z[k]-zc)*(z[k]-zc))/(c*c) <= r*r:
-							mask[i,j,k]=1.
-							mask_gt[i,j,0]=1.
-						if ((x[i]-xcc)*(x[i]-xcc))/(a*a) + ((y[j]-xcc)*(y[j]-xcc))/(b*b) + ((z[k]-zc)*(z[k]-zc))/(c*c) <= r*r:
-							mask[i,j,k]=1.
-							mask_gt[i,j,1]=1.
+			E1.move_and_scale(xc, xc, zc, a, b, c, r)
+			E2.move_and_scale(xcc, xcc, zc, a, b, c, r)
 		elif stacked:
 			"""
 			Stack ellipsoids perfectly above and below.
@@ -445,23 +441,15 @@ class Find_3D(object):
 			xc = len(x)//2
 			zc = len(z)//4 #THERE IS SOME ISSUE WITH SETTING THE Z center NOT IN THE CENTER...
 			zcc = len(z)*3//4
-			mask_gt = np.zeros(shape=(len(x),len(y),2))
-			for i in range(len(x)):
-				for j in range(len(y)):
-					for k in range(len(z)):
-						if ((x[i]-xc)*(x[i]-xc))/(a*a) + ((y[j]-xc)*(y[j]-xc))/(b*b) + ((z[k]-zc)*(z[k]-zc))/(c*c) <= r*r:
-							mask[i,j,k]=1.
-							mask_gt[i,j,0]=1.
-						if ((x[i]-xc)*(x[i]-xc))/(a*a) + ((y[j]-xc)*(y[j]-xc))/(b*b) + ((z[k]-zcc)*(z[k]-zcc))/(c*c) <= r*r:
-							mask[i,j,k]=1.
-							mask_gt[i,j,1]=1.
+			E1.move_and_scale(xc, xc, zc, a, b, c, r)
+			E2.move_and_scale(xc, xc, zcc, a, b, c, r)
 		elif angled:
 			"""
 			Single ellipsoid at an angle
 			Not yet coded.
 			"""
-			mask_gt = np.zeros(shape=(len(x),len(y),1))
 			print("'angled' argument option has not yet been programmed.")
+			raise NotImplementedError
 
 		elif overlapped:
 			"""
@@ -469,20 +457,22 @@ class Find_3D(object):
 			"""
 			a1, b1, c1 = 4, 2, 1
 			a2, b2, c2 = 2, 4, 1
-			mask_gt = np.zeros(shape=(len(x),len(y),2))
 			r=6
 			xc = len(x)//2
 			zc = len(z)//4 #THERE IS SOME ISSUE WITH SETTING THE Z center NOT IN THE CENTER...
 			zcc = len(z)*3//4
-			for i in range(len(x)):
-				for j in range(len(y)):
-					for k in range(len(z)):
-						if ((x[i]-xc)*(x[i]-xc))/(a1*a1) + ((y[j]-xc)*(y[j]-xc))/(b1*b1) + ((z[k]-zc)*(z[k]-zc))/(c1*c1) <= r*r:
-							mask[i,j,k]=1.
-							mask_gt[i,j,0]=1.
-						if ((x[i]-xc)*(x[i]-xc))/(a2*a2) + ((y[j]-xc)*(y[j]-xc))/(b2*b2) + ((z[k]-zcc)*(z[k]-zcc))/(c2*c2) <= r*r:
-							mask[i,j,k]=1.
-							mask_gt[i,j,1]=1.
+			E1.move_and_scale(xc, xc, zc, a1, b1, c1, r)
+			E2.move_and_scale(xc, xc, zcc, a2, b2, c2, r)
+		mask_gt = np.zeros(shape=(len(x),len(y),2))
+		for i in range(len(x)):
+			for j in range(len(y)):
+				for k in range(len(z)):
+					if E1.check(x[i], y[j], z[k]):
+						mask[i,j,k]=1.
+						mask_gt[i,j,0]=1.
+					if E2.check(x[i], y[j], z[k]):
+						mask[i,j,k]=1.
+						mask_gt[i,j,1]=1.
 		#self.plot_z_stack(mask)
 		return mask.astype(np.bool_), mask_gt.astype(np.bool_)
 
